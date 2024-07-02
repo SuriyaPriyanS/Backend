@@ -1,5 +1,5 @@
 import express from 'express';
-import {  google, login, register } from '../Controllers/usercontrollers.js';
+import {  google, login, register } from "../Controllers/userControllers.js";
  
 
 

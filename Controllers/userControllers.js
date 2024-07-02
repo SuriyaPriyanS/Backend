@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import User from "../Models/user.js";
-
 import dotenv from "dotenv";
+
 dotenv.config();
 
 export const register = async (req, res, next) => {
@@ -45,11 +45,11 @@ export const register = async (req, res, next) => {
           console.error("JWT signing error:", err.message);
           return res.status(500).json({ error: "Failed to create token" });
         }
-        res.json({ token });
+        return res.json({ token });
       }
     );
   } catch (error) {
-    console.log("Register error:", error.message);
+    console.error("Register error:", error.message);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -89,25 +89,27 @@ export const login = async (req, res, next) => {
           console.log("JWT signing error:", err.message);
           return res.status(500).json({ message: "Failed to create token" });
         }
-        res
+        return res
           .status(200)
           .cookie("access_Token", token, {
             httpOnly: true,
           })
-          .json({ message: "user login succefully" });
+          .json({ message: "User login successfully" });
       }
     );
   } catch (error) {
-    next(error);
-    console.log("Login error:", error.message);
+    console.error("Login error:", error.message);
     res.status(500).json({ message: "Login Failed Internal server error" });
   }
 };
 
 export const google = async (req, res, next) => {
-  const { email, name, profilepict } = req.body;
+  const { email, name, profilePicture } = req.body;
+
   try {
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+    let token;
+
     if (user) {
       const payload = {
         user: {
@@ -116,56 +118,48 @@ export const google = async (req, res, next) => {
           role: user.role, // Include any other relevant user information
         },
       };
-      const token = jwt.sign(
+
+      token = jwt.sign(
         payload,
         process.env.JWT_SECRET,
-        { expiresIn: "1h" },
-        (err, token) => {
-          if (err) {
-            console.log("JWT signing error:", err.message);
-            return res.status(500).json({ message: "Failed to create token" });
-          }
-          res
-            .status(200)
-            .cookie("access_Token", token, {
-              httpOnly: true,
-            })
-            .json({ message: "user login succefully" });
-        }
+        { expiresIn: "1h" }
       );
     } else {
       const generatePassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(+8);
       const hashedPassword = bcryptjs.hashSync(generatePassword, 10);
-      const newUser = new User({
-        name:
-          name.toLowerCase().split(" ").join("") +
-          Math.random().toString(9).slice(-4),
+      user = new User({
+        name: name.toLowerCase().split(" ").join("") + Math.random().toString(9).slice(-4),
         email,
         password: hashedPassword,
-        profilePicture: profilepict,
+        profilePicture,
       });
-      await newUser.save();
-      const token = jwt.sign(
+      await user.save();
+
+      const payload = {
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role, // Include any other relevant user information
+        },
+      };
+
+      token = jwt.sign(
         payload,
         process.env.JWT_SECRET,
-        { expiresIn: "1h" },
-        (err, token) => {
-          if (err) {
-            console.log("JWT signing error:", err.message);
-            return res.status(500).json({ message: "Failed to create token" });
-          }
-          res
-            .status(200)
-            .cookie("access_Token", token, {
-              httpOnly: true,
-            })
-            .json({ message: "user login succefully" });
-        }
+        { expiresIn: "1h" }
       );
     }
+
+    return res
+      .status(200)
+      .cookie("access_Token", token, {
+        httpOnly: true,
+      })
+      .json({ message: "User login successfully" });
   } catch (error) {
-    next(error);
+    console.error("Google login error:", error.message);
+    res.status(500).json({ message: "Login Failed Internal server error" });
   }
 };

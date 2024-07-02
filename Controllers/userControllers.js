@@ -46,7 +46,7 @@ export const register = async (req, res, next) => {
           return res.status(500).json({ error: "Failed to create token" });
         }
         res.json({ token });
-      
+      }
     );
   } catch (error) {
     console.log("Register error:", error.message);

@@ -10,18 +10,12 @@ import donationCampaignRouter from './Routers/donationRouters.js';
 import paymentRouter from './Routers/paymentRouters.js';
 import applicationRoutes from './Routers/applicationRouter.js';
 import Stripe from 'stripe';
+import connectDB from './Databases/Config.js';
 
 dotenv.config();
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
-    console.log('MongoDB connected');
-}).catch((err) => {
-    console.error('MongoDB connection error:', err);
-});
+connectDB();
 
 const app = express();
 app.use(cors());

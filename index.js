@@ -21,7 +21,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
+app.get("/", (req, res) => {
+    // res.send("Welcome to our API");
+    res
+      .status(200)
+      .send(
+        `<span style="background-color:aqua;color:black;font-weight:bold; font-size:80px">Welcome to our API</span>`
+      );
+  });
 
 // Define routes
 app.use('/api', petRoutes);

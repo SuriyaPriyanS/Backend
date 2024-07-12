@@ -9,6 +9,7 @@ import adoptionRouter from './Routers/adipationRouter.js'; // Ensure correct pat
 import donationCampaignRouter from './Routers/donationRouters.js';
 import paymentRouter from './Routers/paymentRouters.js';
 import applicationRoutes from './Routers/applicationRouter.js';
+import contactOwner from './Routers/ContacteRouter.js'
 import Stripe from 'stripe';
 import connectDB from './Databases/Config.js';
 
@@ -38,6 +39,7 @@ app.use('/api', adoptionRouter); // Corrected variable name
 app.use('/api', donationCampaignRouter);
 app.use('/api', paymentRouter);
 app.use('/api/application', applicationRoutes);
+app.use('/api', contactOwner);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

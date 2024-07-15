@@ -9,9 +9,9 @@ const router = express.Router();
 
 
 router.post('/pet',createPet)
-router.get('/api/pet',getPets)
+router.get('/getpetall',getPets)
 router.get('/pet/:id',getPetById)
-router.put('/api/pet/:id',updatePet)
+router.put('/pet/:id',updatePet)
 router.delete('/api/pet/:id',deletePet)
 
 

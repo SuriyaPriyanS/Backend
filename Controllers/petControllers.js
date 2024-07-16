@@ -49,7 +49,7 @@ export const getPetById = async (req, res) => {
         if (!pet) {
             return res.status(404).json({ message: 'Pet not found' });
         }
-        res.status(200).json({ message: 'Pet retrieved successfully', data: pet });
+        res.status(200).json({ data: pet }); //message: 'Pet retrieved successfully',
     } catch (error) {
         res.status(400).json({ message: 'Error retrieving pet', data: error });
     }

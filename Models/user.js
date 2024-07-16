@@ -22,6 +22,8 @@ const UserSchema = new mongoose.Schema({
         default: "https://www.freepik.com/icon/man_145848#fromView=search&page=1&position=14&uuid=d7fed049-5008-45c3-bed7-7d95942cb37c"
     },
 
+    
+
 });
 
 
